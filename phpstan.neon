@@ -1,0 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+	level: 6
+	paths:
+		- src
+	ignoreErrors:
+		- '#Asserted type.*for \$this with type.*does not narrow down the type#'
+		- '#\:\:toString\(\) invoked with 1 parameter, 0 required\.$#'
+		- '#ReflectionException is never thrown in the try block.#'
+		- '#with no value type specified in iterable type array#'
+		- '#with no value type specified in iterable type iterable#'
+		- '#generic interface ArrayAccess but does not specify its types#'
+		- '#type has no value type specified in iterable type#'

@@ -1,0 +1,121 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Event\\\\Subscriber\\:\\:notify\\(\\)\\.$#"
+			count: 1
+			path: src/Event/Dispatcher/DirectDispatcher.php
+
+		-
+			message: "#^Offset 'running' on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/Event/Facade.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Event/Facade.php
+
+		-
+			message: "#^Offset 'application_time' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'buffer_size' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'collector_time' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'destructor_time' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'free_time' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'full' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'protected' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Offset 'running' does not exist on array\\{runs\\: int, collected\\: int, threshold\\: int, roots\\: int\\}\\.$#"
+			count: 1
+			path: src/Event/Value/Telemetry/Php83GarbageCollectorStatusProvider.php
+
+		-
+			message: "#^Dead catch \\- Throwable is never thrown in the try block\\.$#"
+			count: 1
+			path: src/Framework/TestCase.php
+
+		-
+			message: "#^Method PHPUnit\\\\Framework\\\\TestSuite\\:\\:addTestSuite\\(\\) has parameter \\$testClass with generic class ReflectionClass but does not specify its types\\: T$#"
+			count: 1
+			path: src/Framework/TestSuite.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 2
+			path: src/Metadata/Api/CodeCoverage.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 2
+			path: src/Metadata/Api/Groups.php
+
+		-
+			message: "#^Method PHPUnit\\\\Metadata\\\\Annotation\\\\Parser\\\\DocBlock\\:\\:ofClass\\(\\) has parameter \\$class with generic class ReflectionClass but does not specify its types\\: T$#"
+			count: 1
+			path: src/Metadata/Parser/Annotation/DocBlock.php
+
+		-
+			message: "#^Variable \\$hash in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: src/Runner/Baseline/Issue.php
+
+		-
+			message: "#^Offset 'function' on array\\{function\\: string, line\\?\\: int, file\\?\\: string, class\\: class\\-string, type\\?\\: '\\-\\>'\\|'\\:\\:', args\\?\\: array, object\\?\\: object\\} in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/Runner/ErrorHandler.php
+
+		-
+			message: "#^Parameter \\#1 \\$tests of method PHPUnit\\\\Runner\\\\TestSuiteSorter\\:\\:resolveDependencies\\(\\) expects array\\<PHPUnit\\\\Framework\\\\DataProviderTestSuite\\|PHPUnit\\\\Framework\\\\TestCase\\>, array\\<int, PHPUnit\\\\Framework\\\\Test\\> given\\.$#"
+			count: 1
+			path: src/Runner/TestSuiteSorter.php
+
+		-
+			message: "#^Static property PHPUnit\\\\TextUI\\\\Configuration\\\\SourceMapper\\:\\:\\$files \\(SplObjectStorage\\<PHPUnit\\\\TextUI\\\\Configuration\\\\Source, array\\<non\\-empty\\-string, true\\>\\>\\|null\\) does not accept SplObjectStorage\\<object, mixed\\>\\.$#"
+			count: 1
+			path: src/TextUI/Configuration/SourceMapper.php
+
+		-
+			message: "#^Method PHPUnit\\\\TextUI\\\\XmlConfiguration\\\\SnapshotNodeList\\:\\:fromNodeList\\(\\) has parameter \\$list with generic class DOMNodeList but does not specify its types\\: TNode$#"
+			count: 1
+			path: src/TextUI/Configuration/Xml/Migration/SnapshotNodeList.php
+
+		-
+			message: "#^Method PHPUnit\\\\TextUI\\\\XmlConfiguration\\\\SnapshotNodeList\\:\\:getIterator\\(\\) return type with generic class ArrayIterator does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/TextUI/Configuration/Xml/Migration/SnapshotNodeList.php
+
+		-
+			message: "#^Dead catch \\- Throwable is never thrown in the try block\\.$#"
+			count: 1
+			path: src/Util/Cloner.php
+
+		-
+			message: "#^Offset string on array\\<string, string\\> on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: src/Util/Color.php
