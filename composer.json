@@ -53,7 +53,10 @@
             "php": "8.2.0"
         },
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "suggest": {
         "ext-soap": "To be able to generate mocks based on WSDL files"
@@ -85,5 +88,8 @@
         "branch-alias": {
             "dev-main": "11.1-dev"
         }
+    },
+    "require-dev": {
+        "infection/infection": "^0.28.1"
     }
 }
