@@ -46,7 +46,7 @@ final readonly class ListGroupsCommand implements Command
                 continue;
             }
 
-            $groups = array_merge($groups, $test->groups());
+            array_push($groups, ...$test->groups());
         }
 
         $groups = array_unique($groups);

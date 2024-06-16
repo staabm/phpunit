@@ -366,7 +366,7 @@ final class ResultPrinter
         $triggeringTests      = [];
 
         foreach ($issues as $issue) {
-            $triggeringTests = array_merge($triggeringTests, array_keys($issue->triggeringTests()));
+            array_push($triggeringTests, ...array_keys($issue->triggeringTests()));
         }
 
         $numberOfTests = count(array_unique($triggeringTests));

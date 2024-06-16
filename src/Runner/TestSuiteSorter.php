@@ -312,7 +312,7 @@ final class TestSuiteSorter
 
         do {
             if ([] === array_diff($tests[$i]->requires(), $provided)) {
-                $provided     = array_merge($provided, $tests[$i]->provides());
+                array_push($provided, ...$tests[$i]->provides());
                 $newTestOrder = array_merge($newTestOrder, array_splice($tests, $i, 1));
                 $i            = 0;
             } else {
@@ -332,7 +332,7 @@ final class TestSuiteSorter
                 if (!$test instanceof TestSuite && $test instanceof Reorderable) {
                     $tests[] = $test->sortId();
                 } else {
-                    $tests = array_merge($tests, $this->calculateTestExecutionOrder($test));
+                    array_push($tests, ...$this->calculateTestExecutionOrder($test));
                 }
             }
         }

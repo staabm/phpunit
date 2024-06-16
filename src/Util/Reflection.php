@@ -103,7 +103,7 @@ final readonly class Reflection
         $methods = [];
 
         foreach ($classNames as $className) {
-            $methods = array_merge($methods, $methodsByClass[$className]);
+            array_push($methods, ...$methodsByClass[$className]);
         }
 
         return $methods;

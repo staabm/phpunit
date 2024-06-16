@@ -313,7 +313,7 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
 
         foreach ($this as $test) {
             if ($test instanceof self) {
-                $tests = array_merge($tests, $test->collect());
+                array_push($tests, ...$test->collect());
 
                 continue;
             }

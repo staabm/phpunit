@@ -118,7 +118,7 @@ final class TestResultCollector
             $tests = [];
 
             foreach ($testsByDeclaringClass as $_tests) {
-                $tests = array_merge($tests, $_tests);
+                array_push($tests, ...$_tests);
             }
 
             $result[$prettifiedClassName] = TestResultCollection::fromArray($tests);

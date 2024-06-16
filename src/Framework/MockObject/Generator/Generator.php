@@ -183,7 +183,7 @@ final class Generator
         $methods = [];
 
         foreach ($interfaces as $interface) {
-            $methods = array_merge($methods, $this->namesOfMethodsIn($interface));
+            array_push($methods, ...$this->namesOfMethodsIn($interface));
         }
 
         if (count(array_unique($methods)) < count($methods)) {
