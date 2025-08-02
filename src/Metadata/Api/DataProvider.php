@@ -77,40 +77,26 @@ final readonly class DataProvider
         $testMethodIsNonVariadic      = !$method->isVariadic();
 
         foreach ($data as $key => $providedData) {
-            $value = $providedData->value();
+            $value = $providedData->getData();
 
             if (!is_array($value)) {
                 throw new InvalidDataProviderException(
                     sprintf(
                         'Data set %s provided by %s is invalid, expected array but got %s',
                         $this->formatKey($key),
-                        $providedData->label(),
+                        $providedData->getProviderLabel(),
                         get_debug_type($value),
                     ),
                 );
             }
 
             if ($testMethodIsNonVariadic && $testMethodNumberOfParameters < count($value)) {
-                Event\Facade::emitter()->testTriggeredPhpunitWarning(
-                    new TestMethod(
-                        $className,
-                        $methodName,
-                        $method->getFileName(),
-                        $method->getStartLine(),
-                        Event\Code\TestDoxBuilder::fromClassNameAndMethodName(
-                            $className,
-                            $methodName,
-                        ),
-                        MetadataCollection::fromArray([]),
-                        Event\TestData\TestDataCollection::fromArray([]),
-                    ),
-                    sprintf(
-                        'Data set %s provided by %s has more arguments (%d) than the test method accepts (%d)',
-                        $this->formatKey($key),
-                        $providedData->label(),
-                        count($value),
-                        $testMethodNumberOfParameters,
-                    ),
+                $this->triggerWarningForArgumentCount(
+                    $method,
+                    $this->formatKey($key),
+                    $providedData->getProviderLabel(),
+                    count($value),
+                    $testMethodNumberOfParameters,
                 );
             }
         }
@@ -130,11 +116,7 @@ final readonly class DataProvider
     {
         $testMethod    = new Event\Code\ClassMethod($className, $methodName);
         $methodsCalled = [];
-
-        /**
-         * @var array<ProvidedData> $result
-         */
-        $result = [];
+        $result        = [];
 
         foreach ($dataProvider as $_dataProvider) {
             assert($_dataProvider instanceof DataProviderMetadata);
@@ -210,24 +192,21 @@ final readonly class DataProvider
                             sprintf(
                                 'The key "%s" has already been defined by provider %s',
                                 $key,
-                                $result[$key]->label(),
+                                $result[$key]->getProviderLabel(),
                             ),
                         );
                     }
 
                     $result[$key] = new ProvidedData($providerLabel, $value);
                 } else {
-                    Event\Facade::emitter()->dataProviderMethodFinished(
-                        $testMethod,
-                        ...$methodsCalled,
-                    );
-
+                    // @codeCoverageIgnoreStart
                     throw new InvalidDataProviderException(
                         sprintf(
                             'The key must be an integer or a string, %s given',
                             get_debug_type($key),
                         ),
                     );
+                    // @codeCoverageIgnoreEnd
                 }
             }
         }
@@ -260,7 +239,7 @@ final readonly class DataProvider
                         sprintf(
                             'The key "%s" has already been defined by %s',
                             $key,
-                            $result[$key]->label(),
+                            $result[$key]->getProviderLabel(),
                         ),
                     );
                 }
@@ -300,6 +279,31 @@ final readonly class DataProvider
                 Event\TestData\TestDataCollection::fromArray([]),
             ),
             'Mixing #[DataProvider*] and #[TestWith*] attributes is not supported, only the data provided by #[DataProvider*] will be used',
+        );
+    }
+
+    private function triggerWarningForArgumentCount(ReflectionMethod $method, string $key, string $label, int $numberOfValues, int $testMethodNumberOfParameters): void
+    {
+        Event\Facade::emitter()->testTriggeredPhpunitWarning(
+            new TestMethod(
+                $method->getDeclaringClass()->getName(),
+                $method->getName(),
+                $method->getFileName(),
+                $method->getStartLine(),
+                Event\Code\TestDoxBuilder::fromClassNameAndMethodName(
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName(),
+                ),
+                MetadataCollection::fromArray([]),
+                Event\TestData\TestDataCollection::fromArray([]),
+            ),
+            sprintf(
+                'Data set %s provided by %s has more arguments (%d) than the test method accepts (%d)',
+                $key,
+                $label,
+                $numberOfValues,
+                $testMethodNumberOfParameters,
+            ),
         );
     }
 }
