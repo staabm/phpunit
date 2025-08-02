@@ -62,40 +62,10 @@ final readonly class DataProvider
                 $this->triggerWarningForMixingOfDataProviderAndTestWith($testMethod);
             }
 
-            $data = $this->dataProvidedByMethods($testMethod, $dataProvider);
-        } else {
-            $data = $this->dataProvidedByMetadata($testWith);
+            return $this->dataProvidedByMethods($testMethod, $dataProvider);
         }
 
-        $testMethodNumberOfParameters = $testMethod->getNumberOfParameters();
-        $testMethodIsNonVariadic      = !$testMethod->isVariadic();
-
-        foreach ($data as $key => $providedData) {
-            $value = $providedData->getData();
-
-            if (!is_array($value)) {
-                throw new InvalidDataProviderException(
-                    sprintf(
-                        'Data set %s provided by %s is invalid, expected array but got %s',
-                        $this->formatKey($key),
-                        $providedData->getProviderLabel(),
-                        get_debug_type($value),
-                    ),
-                );
-            }
-
-            if ($testMethodIsNonVariadic && $testMethodNumberOfParameters < count($value)) {
-                $this->triggerWarningForArgumentCount(
-                    $testMethod,
-                    $this->formatKey($key),
-                    $providedData->getProviderLabel(),
-                    count($value),
-                    $testMethodNumberOfParameters,
-                );
-            }
-        }
-
-        return $data;
+        return $this->dataProvidedByMetadata($testMethod, $testWith);
     }
 
     /**
@@ -175,14 +145,12 @@ final readonly class DataProvider
 
             foreach ($data as $key => $value) {
                 if (!is_int($key) && !is_string($key)) {
-                    // @codeCoverageIgnoreStart
                     throw new InvalidDataProviderException(
                         sprintf(
                             'The key must be an integer or a string, %s given',
                             get_debug_type($key),
                         ),
                     );
-                    // @codeCoverageIgnoreEnd
                 }
 
                 if (is_int($key)) {
@@ -201,7 +169,7 @@ final readonly class DataProvider
                         sprintf(
                             'The key "%s" has already been defined by provider %s',
                             $key,
-                            $result[$key]->getProviderLabel(),
+                            $result[$key]->label(),
                         ),
                     );
                 }
@@ -221,13 +189,15 @@ final readonly class DataProvider
             );
         }
 
+        $this->validate($testMethod, $result);
+
         return $result;
     }
 
     /**
      * @return array<ProvidedData>
      */
-    private function dataProvidedByMetadata(MetadataCollection $testWith): array
+    private function dataProvidedByMetadata(ReflectionMethod $testMethod, MetadataCollection $testWith): array
     {
         $result = [];
 
@@ -244,7 +214,7 @@ final readonly class DataProvider
                         sprintf(
                             'The key "%s" has already been defined by %s',
                             $key,
-                            $result[$key]->getProviderLabel(),
+                            $result[$key]->label(),
                         ),
                     );
                 }
@@ -255,7 +225,45 @@ final readonly class DataProvider
             }
         }
 
+        $this->validate($testMethod, $result);
+
         return $result;
+    }
+
+    /**
+     * @param array<ProvidedData> $data
+     *
+     * @throws InvalidDataProviderException
+     */
+    private function validate(ReflectionMethod $testMethod, array $data): void
+    {
+        $testMethodNumberOfParameters = $testMethod->getNumberOfParameters();
+        $testMethodIsNonVariadic      = !$testMethod->isVariadic();
+
+        foreach ($data as $key => $providedData) {
+            $value = $providedData->value();
+
+            if (!is_array($value)) {
+                throw new InvalidDataProviderException(
+                    sprintf(
+                        'Data set %s provided by %s is invalid, expected array but got %s',
+                        $this->formatKey($key),
+                        $providedData->label(),
+                        get_debug_type($value),
+                    ),
+                );
+            }
+
+            if ($testMethodIsNonVariadic && $testMethodNumberOfParameters < count($value)) {
+                $this->triggerWarningForArgumentCount(
+                    $testMethod,
+                    $this->formatKey($key),
+                    $providedData->label(),
+                    count($value),
+                    $testMethodNumberOfParameters,
+                );
+            }
+        }
     }
 
     /**
