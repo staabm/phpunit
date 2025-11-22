@@ -16,6 +16,7 @@ use function class_exists;
 use function defined;
 use function dirname;
 use function explode;
+use function flush;
 use function function_exists;
 use function is_file;
 use function method_exists;
@@ -26,6 +27,7 @@ use function str_contains;
 use function str_starts_with;
 use function trim;
 use function unlink;
+use Iterator;
 use PHPUnit\Event\EventFacadeIsSealedException;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Event\UnknownSubscriberTypeException;
@@ -337,6 +339,20 @@ final readonly class Application
 
         if (!$errored) {
             $result = $command->execute();
+
+            if ($result instanceof Iterator) {
+                $exitCode = Result::SUCCESS;
+
+                foreach ($result as $incrementalResult) {
+                    if ($incrementalResult instanceof Result) {
+                        $exitCode = $incrementalResult->shellExitCode();
+                    }
+                    print $incrementalResult->output();
+                    flush();
+                }
+
+                exit($exitCode);
+            }
 
             print $result->output();
 

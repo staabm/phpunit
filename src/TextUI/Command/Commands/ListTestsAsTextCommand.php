@@ -13,6 +13,7 @@ use const PHP_EOL;
 use function count;
 use function sprintf;
 use function str_replace;
+use Iterator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Phpt\TestCase as PhptTestCase;
 
@@ -24,24 +25,24 @@ use PHPUnit\Runner\Phpt\TestCase as PhptTestCase;
 final readonly class ListTestsAsTextCommand implements Command
 {
     /**
-     * @var list<PhptTestCase|TestCase>
+     * @var iterable<PhptTestCase|TestCase>
      */
-    private array $tests;
+    private iterable $tests;
 
     /**
-     * @param list<PhptTestCase|TestCase> $tests
+     * @param iterable<PhptTestCase|TestCase> $tests
      */
-    public function __construct(array $tests)
+    public function __construct(iterable $tests)
     {
         $this->tests = $tests;
     }
 
-    public function execute(): Result
+    public function execute(): Iterator
     {
-        $buffer = sprintf(
+        yield IncrementalResult::from(sprintf(
             'Available test%s:' . PHP_EOL,
             count($this->tests) > 1 ? 's' : '',
-        );
+        ));
 
         foreach ($this->tests as $test) {
             if ($test instanceof TestCase) {
@@ -54,12 +55,10 @@ final readonly class ListTestsAsTextCommand implements Command
                 $name = $test->getName();
             }
 
-            $buffer .= sprintf(
+            yield IncrementalResult::from(sprintf(
                 ' - %s' . PHP_EOL,
                 $name,
-            );
+            ));
         }
-
-        return Result::from($buffer);
     }
 }

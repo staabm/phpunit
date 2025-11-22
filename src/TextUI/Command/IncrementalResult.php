@@ -9,17 +9,29 @@
  */
 namespace PHPUnit\TextUI\Command;
 
-use Iterator;
-
 /**
+ * @immutable
+ *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-interface Command
+final readonly class IncrementalResult
 {
-    /**
-     * @return Iterator<IncrementalResult|Result>|Result
-     */
-    public function execute(): Iterator|Result;
+    private string $output;
+
+    public static function from(string $output): self
+    {
+        return new self($output);
+    }
+
+    private function __construct(string $output)
+    {
+        $this->output = $output;
+    }
+
+    public function output(): string
+    {
+        return $this->output;
+    }
 }
