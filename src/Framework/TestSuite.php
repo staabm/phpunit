@@ -301,25 +301,23 @@ class TestSuite implements IteratorAggregate, Reorderable, Test
     }
 
     /**
-     * @return list<PhptTestCase|TestCase>
+     * @return iterable<PhptTestCase|TestCase>
      */
-    public function collect(): array
+    public function collect(): iterable
     {
         $tests = [];
 
         foreach ($this as $test) {
             if ($test instanceof self) {
-                $tests = array_merge($tests, $test->collect());
+                yield from $test->collect();
 
                 continue;
             }
 
             assert($test instanceof TestCase || $test instanceof PhptTestCase);
 
-            $tests[] = $test;
+            yield $test;
         }
-
-        return $tests;
     }
 
     /**

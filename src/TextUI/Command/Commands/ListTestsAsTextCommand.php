@@ -39,10 +39,7 @@ final readonly class ListTestsAsTextCommand implements Command
 
     public function execute(): Iterator
     {
-        yield IncrementalResult::from(sprintf(
-            'Available test%s:' . PHP_EOL,
-            count($this->tests) > 1 ? 's' : '',
-        ));
+        $buffer = [];
 
         foreach ($this->tests as $test) {
             if ($test instanceof TestCase) {
@@ -55,10 +52,32 @@ final readonly class ListTestsAsTextCommand implements Command
                 $name = $test->getName();
             }
 
-            yield IncrementalResult::from(sprintf(
-                ' - %s' . PHP_EOL,
-                $name,
+            if ($buffer === null) {
+                yield IncrementalResult::from(sprintf(
+                    ' - %s' . PHP_EOL,
+                    $name,
+                ));
+            } elseif (count($buffer) === 1) {
+                yield IncrementalResult::from(sprintf(
+                    'Available tests:' . PHP_EOL
+                ));
+
+                yield from $buffer;
+                $buffer = null;
+            } else {
+                $buffer[] = IncrementalResult::from(sprintf(
+                    ' - %s' . PHP_EOL,
+                    $name,
+                ));
+            }
+        }
+
+        if ($buffer !== null && count($buffer) === 1) {
+            $buffer[] = IncrementalResult::from(sprintf(
+                'Available test:' . PHP_EOL
             ));
+
+            yield from $buffer;
         }
     }
 }

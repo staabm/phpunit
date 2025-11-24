@@ -784,9 +784,9 @@ final readonly class Application
     }
 
     /**
-     * @return list<PhptTestCase|TestCase>
+     * @return iterable<PhptTestCase|TestCase>
      */
-    private function filteredTests(Configuration $configuration, TestSuite $suite): array
+    private function filteredTests(Configuration $configuration, TestSuite $suite): iterable
     {
         (new TestSuiteFilterProcessor)->process($configuration, $suite);
 

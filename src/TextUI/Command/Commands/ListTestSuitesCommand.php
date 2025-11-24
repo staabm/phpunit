@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\TextUI\Command;
 
+use Iterator;
 use const PHP_EOL;
 use function assert;
 use function count;
@@ -31,7 +32,7 @@ final readonly class ListTestSuitesCommand implements Command
         $this->testSuite = $testSuite;
     }
 
-    public function execute(): Result
+    public function execute(): Iterator
     {
         /** @var array<non-empty-string, positive-int> $suites */
         $suites = [];
@@ -44,23 +45,21 @@ final readonly class ListTestSuitesCommand implements Command
 
         ksort($suites);
 
-        $buffer = $this->warnAboutConflictingOptions();
+        yield IncrementalResult::from($this->warnAboutConflictingOptions());
 
-        $buffer .= sprintf(
+        yield IncrementalResult::from(sprintf(
             'Available test suite%s:' . PHP_EOL,
             count($suites) > 1 ? 's' : '',
-        );
+        ));
 
         foreach ($suites as $suite => $numberOfTests) {
-            $buffer .= sprintf(
+            yield IncrementalResult::from(sprintf(
                 ' - %s (%d test%s)' . PHP_EOL,
                 $suite,
                 $numberOfTests,
                 $numberOfTests > 1 ? 's' : '',
-            );
+            ));
         }
-
-        return Result::from($buffer);
     }
 
     private function warnAboutConflictingOptions(): string
